@@ -115,6 +115,7 @@ def main
   
   # Try to extract board ID from URL first
   board_id = extract_board_id_from_url(input)
+  short_id = board_id if board_id # Save the short ID from the URL
   
   if board_id
     puts "✅ Found board ID in URL: #{board_id}"
@@ -124,8 +125,10 @@ def main
       puts
       display_board_info(board_data)
       puts
-      puts "🎯 Board ID for use in scripts:"
-      puts "BOARD_ID = \"#{board_id}\""
+      puts "🎯 Board IDs for use in scripts:"
+      puts "SHORT_ID = \"#{short_id}\"" # Output the short ID
+      puts "FULL_BOARD_ID = \"#{board_data['id']}\"" # Output the full board ID from API
+      puts "BOARD_ID = \"#{short_id}\" # (short, from URL) or #{board_data['id']} (full, from API)"
     else
       puts "❌ Could not fetch board details. Possible reasons:"
       puts "   - Board ID is invalid"
