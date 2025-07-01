@@ -1,0 +1,9 @@
+#!/usr/bin/env ruby
+
+# Simple wrapper script for copying Trello lists
+# This file loads credentials and executes the copy operation
+
+# Add lib directory to load path
+$LOAD_PATH.unshift(File.join(__dir__, '..', 'lib'))
+
+require 'copy_trello_lists_execute'

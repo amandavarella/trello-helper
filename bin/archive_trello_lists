@@ -1,0 +1,9 @@
+#!/usr/bin/env ruby
+
+# Archive Trello lists by number range
+# This script archives lists with numbers in a specified range
+
+# Add lib directory to load path
+$LOAD_PATH.unshift(File.join(__dir__, '..', 'lib'))
+
+require 'archive_trello_lists_by_range' 

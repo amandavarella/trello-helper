@@ -1,0 +1,12 @@
+# Trello API Configuration
+# Copy this file to .env and update with your actual credentials
+
+TRELLO_API_KEY=
+TRELLO_API_TOKEN=
+
+# Board IDs (optional - can be overridden via command line)
+TRELLO_SOURCE_BOARD_ID=
+TRELLO_DESTINATION_BOARD_ID=
+
+# Trello API Base URL
+TRELLO_BASE_URL=https://api.trello.com/1 

@@ -1,0 +1,9 @@
+#!/usr/bin/env ruby
+
+# Get Trello board ID from URL or name
+# This script extracts board IDs for use in other scripts
+
+# Add lib directory to load path
+$LOAD_PATH.unshift(File.join(__dir__, '..', 'lib'))
+
+require 'get_trello_board_id' 

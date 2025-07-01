@@ -1,0 +1,7 @@
+#!/usr/bin/env ruby
+
+# Count Trello lists in a board
+# Usage: bin/count_trello_lists [BOARD_ID]
+
+$LOAD_PATH.unshift(File.join(__dir__, '..', 'lib'))
+require 'count_trello_lists' 
