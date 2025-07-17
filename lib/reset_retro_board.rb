@@ -110,8 +110,9 @@ def reset_retro_board(start_list_num, end_list_num)
   end
   puts
   
-  # Step 1: Save original names
+  # Step 1: Save original names and positions
   original_names = selected_lists.map { |list| list['name'] }
+  original_positions = selected_lists.map { |list| list['pos'] }
   
   # Step 2: Rename lists in source board to '<original name> <date>'
   two_weeks_ago = get_two_weeks_ago_date()
@@ -126,11 +127,11 @@ def reset_retro_board(start_list_num, end_list_num)
   # Fetch lists again to ensure names are available for new lists
   source_lists = get_board_lists(SOURCE_BOARD_RETRO_ID)
 
-  # Step 3: Create new empty lists in source board with original names
+  # Step 3: Create new empty lists in source board with original names and positions
   puts "📝 Creating new empty lists in source board..."
-  original_names.each do |name|
-    puts "  Creating: #{name}"
-    create_list(SOURCE_BOARD_RETRO_ID, name, "bottom")
+  original_names.each_with_index do |name, idx|
+    puts "  Creating: #{name} (at position #{original_positions[idx]})"
+    create_list(SOURCE_BOARD_RETRO_ID, name, original_positions[idx])
   end
   puts
   
