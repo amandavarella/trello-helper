@@ -1,11 +1,12 @@
 # 📋 Trello Helper (Ruby Scripts)
 
-This project provides a set of Ruby scripts to help you work with Trello boards, lists, and cards using the Trello API. It includes tools for copying lists, archiving lists, and extracting board IDs from Trello URLs or names.
+This project provides a set of Ruby scripts to help you work with Trello boards, lists, and cards using the Trello API. It includes tools for copying lists, archiving lists, resetting retrospective boards, and extracting board IDs from Trello URLs or names.
 
 ## 🚀 Features
 
 - Copy all lists (columns) and their cards from one Trello board to another
 - Archive lists by number range
+- Reset retrospective boards by copying and renaming lists with dates
 - Extract Trello board IDs (outputs both the short ID from the URL and the full ID from the API)
 - Helper functions for Trello automation
 
@@ -77,6 +78,8 @@ TRELLO_API_KEY=your_api_key
 TRELLO_API_TOKEN=your_generated_token
 TRELLO_SOURCE_BOARD_ID=your_source_board_id
 TRELLO_DESTINATION_BOARD_ID=your_destination_board_id
+TRELLO_SOURCE_BOARD_RETRO_ID=your_retro_source_board_id
+TRELLO_DESTINATION_BOARD_RETRO_ID=your_retro_destination_board_id
 ```
 
 **All configuration is loaded from environment variables. There are no hardcoded defaults.**
@@ -93,8 +96,8 @@ Example output:
 ```
 🎯 Board IDs for use in scripts:
 SHORT_ID = "abc123"
-FULL_BOARD_ID = "6811c0bb0c4d45b8afc31527"
-BOARD_ID = "abc123" # (short, from URL) or 6811c0bb0c4d45b8afc31527 (full, from API)
+FULL_BOARD_ID = "6811c0bb045afc31527"
+BOARD_ID = "abc123" # (short, from URL) or 6811c0bb045afc31527 (full, from API)
 ```
 
 You can also search by board name:
@@ -114,6 +117,9 @@ bin/archive_trello_lists 1 5
 
 # Get board ID from URL or name
 bin/get_trello_board_id "https://trello.com/b/abc123/board-name"
+
+# Reset retrospective board
+bin/reset_retro_board 3 6
 ```
 
 ### As a Library
@@ -145,11 +151,13 @@ trello-helper/
 │   ├── trello_tools.rb            # Main library entry point
 │   ├── copy_trello_lists_execute.rb
 │   ├── archive_trello_lists_by_range.rb
-│   └── get_trello_board_id.rb
+│   ├── get_trello_board_id.rb
+│   └── reset_retro_board.rb
 ├── bin/                          # Executable scripts
 │   ├── copy_trello_lists
 │   ├── archive_trello_lists
-│   └── get_trello_board_id
+│   ├── get_trello_board_id
+│   └── reset_retro_board
 ├── config/                       # Configuration files
 │   └── env_example.txt
 ├── spec/                         # Tests (to be added)
@@ -177,15 +185,15 @@ Copying list: For the Manager
 
 ## 🛠️ Additional Scripts
 
-This repository also includes additional Trello utilities:
+This repository includes multiple Trello utilities:
 
 ### 📦 Archive Lists by Number Range
 ```bash
 # Archive lists with numbers 1-5
-ruby archive_trello_lists_by_range.rb 1 5
+bin/archive_trello_lists 1 5
 
 # Test what would be archived (dry run)
-ruby archive_trello_lists_by_range.rb 1 5 --dry-run
+bin/archive_trello_lists 1 5 --dry-run
 ```
 
 ### 🔍 Get Board ID from URL or Name
@@ -195,6 +203,44 @@ bin/get_trello_board_id "https://trello.com/b/abc123/board-name"
 
 # Search by board name
 bin/get_trello_board_id "My Project Board"
+```
+
+### 🔄 Reset Retrospective Board
+```bash
+# Reset lists 3 to 6 for retrospective
+bin/reset_retro_board 3 6
+```
+
+The reset retrospective board script will:
+1. Save the original names of the specified lists from the source board
+2. Rename those lists to `<original_name> <2_weeks_ago_date>`
+3. Create new empty lists in the source board with the original names
+4. Move the renamed lists to the destination board
+
+**Required environment variables:**
+- `TRELLO_SOURCE_BOARD_RETRO_ID` - The source retrospective board ID
+- `TRELLO_DESTINATION_BOARD_RETRO_ID` - The destination board ID for archived lists
+
+Example output:
+```text
+🔄 Resetting Retrospective Board
+📅 Using date: 2025-01-03
+📋 Processing lists 3 to 6
+✅ Found 4 lists to process:
+  3. To dos
+  4. What went well
+  5. What could have gone better?
+  6. I am puzzled about
+
+✏️ Renaming lists in source board...
+📝 Creating new empty lists in source board...
+🚚 Moving renamed lists to destination board...
+
+🎉 Retrospective board reset complete!
+📊 Summary:
+  - Renamed and moved 4 lists to destination board
+  - Created 4 new empty lists in source board
+  - All lists renamed with date: 2025-01-03
 ```
 
 ## 🔒 Security
