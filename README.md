@@ -5,6 +5,7 @@ This project provides a set of Ruby scripts to help you work with Trello boards,
 ## 🚀 Features
 
 - Copy all lists (columns) and their cards from one Trello board to another
+- **Move lists by name pattern** - Move lists starting with specific text between boards
 - Archive lists by number range
 - Reset retrospective boards by copying and renaming lists with dates
 - Extract Trello board IDs (outputs both the short ID from the URL and the full ID from the API)
@@ -112,6 +113,9 @@ bin/get_trello_board_id "My Project Board"
 # Copy lists between boards
 bin/copy_trello_lists
 
+# Move lists by name pattern
+bin/move_lists_by_pattern https://trello.com/b/source123 https://trello.com/b/dest456 "Done W"
+
 # Archive lists by number range
 bin/archive_trello_lists 1 5
 
@@ -151,11 +155,13 @@ trello-helper/
 │   ├── trello_tools.rb            # Main library entry point
 │   ├── copy_trello_lists_execute.rb
 │   ├── archive_trello_lists_by_range.rb
+│   ├── move_lists_by_name_pattern.rb  # Move lists by name pattern
 │   ├── get_trello_board_id.rb
 │   └── reset_retro_board.rb
 ├── bin/                          # Executable scripts
 │   ├── copy_trello_lists
 │   ├── archive_trello_lists
+│   ├── move_lists_by_pattern     # NEW: Move lists by pattern
 │   ├── get_trello_board_id
 │   └── reset_retro_board
 ├── config/                       # Configuration files
@@ -195,6 +201,26 @@ bin/archive_trello_lists 1 5
 # Test what would be archived (dry run)
 bin/archive_trello_lists 1 5 --dry-run
 ```
+
+### 🔄 Move Lists by Name Pattern
+```bash
+# Move all lists starting with "Done W" from source to destination board
+bin/move_lists_by_pattern https://trello.com/b/source123 https://trello.com/b/dest456 "Done W"
+
+# Move all lists starting with "Sprint"
+bin/move_lists_by_pattern source123 dest456 "Sprint"
+
+# Preview what would be moved (dry run)
+bin/move_lists_by_pattern https://trello.com/b/source123 dest456 "ALL" --dry-run
+```
+
+This script moves (not copies) lists and all their cards from a source board to a destination board based on a name pattern. Features:
+- **Case-insensitive pattern matching** - finds lists starting with the specified string
+- **Accepts board URLs or IDs** - automatically extracts board IDs from full Trello URLs
+- **Moves lists with all cards** - preserves all card data, labels, members, etc.
+- **Confirmation prompt** - warns that lists will be removed from source board
+- **Dry-run mode** - preview what would be moved without making changes
+- **Detailed progress reporting** - shows success/failure for each list
 
 ### 🔍 Get Board ID from URL or Name
 ```bash

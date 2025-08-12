@@ -1,0 +1,46 @@
+#!/usr/bin/env ruby
+
+# Add the lib directory to the load path
+lib_dir = File.expand_path('../lib', __dir__)
+$LOAD_PATH.unshift(lib_dir) unless $LOAD_PATH.include?(lib_dir)
+
+require_relative '../lib/move_lists_by_name_pattern'
+
+# Main execution
+if ARGV.empty? || ARGV.include?('--help') || ARGV.include?('-h')
+  show_usage
+  exit
+end
+
+if ARGV.length < 3
+  puts "❌ Error: Please provide source board, destination board, and pattern"
+  puts
+  show_usage
+  exit 1
+end
+
+source_input = ARGV[0]
+destination_input = ARGV[1]
+pattern = ARGV[2]
+dry_run = ARGV.include?('--dry-run')
+
+# Extract board IDs from URLs or use as-is if already IDs
+source_board_id = extract_board_id_from_url(source_input) || source_input
+destination_board_id = extract_board_id_from_url(destination_input) || destination_input
+
+if source_board_id.nil? || source_board_id.empty?
+  puts "❌ Error: Invalid source board URL or ID"
+  exit 1
+end
+
+if destination_board_id.nil? || destination_board_id.empty?
+  puts "❌ Error: Invalid destination board URL or ID"
+  exit 1
+end
+
+if pattern.nil? || pattern.empty?
+  puts "❌ Error: Pattern cannot be empty"
+  exit 1
+end
+
+move_lists_by_pattern(source_board_id, destination_board_id, pattern, dry_run)
